@@ -1,2 +1,1 @@
-# super-octo-meme
-ECS app with AWS CDK
+AWS ECS app with Terraform

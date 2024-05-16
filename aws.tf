@@ -1,0 +1,16 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+    }
+  }
+}
+
+provider "aws" {
+  region = "ap-northeast-1"
+  default_tags {
+    tags = {
+      project = var.project
+    }
+  }
+}
