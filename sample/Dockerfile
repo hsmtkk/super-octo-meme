@@ -1,0 +1,2 @@
+FROM httpd:2
+EXPOSE 80
