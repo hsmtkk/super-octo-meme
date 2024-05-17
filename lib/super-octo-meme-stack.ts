@@ -13,22 +13,20 @@ export class SuperOctoMemeStack extends cdk.Stack {
       natGateways: 0,
     })
 
-    const service = new ecs_patterns.ApplicationLoadBalancedFargateService(this, "service", {
-      capacityProviderStrategies: [{
-        capacityProvider: "FARGATE_SPOT",
-        weight: 1,
-        base: 1,
-      }],
-      platformVersion: ecs.FargatePlatformVersion.VERSION1_3,
-      taskImageOptions: {
-        // image: ecs.ContainerImage.("public.ecr.aws/ecs-sample-image/amazon-ecs-sample:latest"),
-        image: ecs.ContainerImage.fromAsset("./sample"),
-        enableLogging: true,
-      },
-      taskSubnets: {
-        subnetType: ec2.SubnetType.PUBLIC,
-      },
+    const cluster = new ecs.Cluster(this, "cluster", {
       vpc: vpc,
+    })
+
+    const service = new ecs_patterns.ApplicationLoadBalancedFargateService(this, "service", {
+      assignPublicIp: true,
+      cluster: cluster,
+      desiredCount: 1,
+      taskImageOptions: {
+        image: ecs.ContainerImage.fromAsset("./sample"),
+      },
+      taskSubnets: cluster.vpc.selectSubnets({
+        subnetType: ec2.SubnetType.PUBLIC,
+      })
     })
   }
 }
